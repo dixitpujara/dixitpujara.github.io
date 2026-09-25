@@ -6,6 +6,27 @@
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer  = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+/* ── Loading screen: hide once the hero photo/3D is ready (min 600ms, max 2.5s) ── */
+(function () {
+  const loader = document.getElementById('pageLoader');
+  const hero   = document.getElementById('home');
+  if (!loader) return;
+  const start = performance.now();
+  let hidden = false;
+  function hide() {
+    if (hidden) return;
+    hidden = true;
+    const wait = reduceMotion ? 0 : Math.max(0, 600 - (performance.now() - start));
+    setTimeout(() => loader.classList.add('done'), wait);
+  }
+  window.addEventListener('hero-ready', hide);
+  setTimeout(() => {
+    // 3D module never reported in (blocked or failed): fall back to the plain photo
+    if (hero && !hero.classList.contains('webgl-ready')) hero.classList.add('no-webgl');
+    hide();
+  }, 2500);
+})();
+
 /* ── Navbar: scroll shadow & active link ── */
 (function () {
   const navbar    = document.getElementById('navbar');
