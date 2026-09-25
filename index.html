@@ -30,7 +30,7 @@
       document.documentElement.classList.add('js');
     })();
   </script>
-  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="style.css?v=14" />
 </head>
 <body>
 
@@ -129,13 +129,21 @@
     <div class="hero-visual">
       <div class="hero-stage" id="heroStage">
         <div class="stage-glow" aria-hidden="true"></div>
-        <div class="stage-ring" aria-hidden="true"></div>
+        <div class="stage-orbits" aria-hidden="true">
+          <span class="orbit o1"><i></i></span>
+          <span class="orbit o2"><i></i></span>
+          <span class="orbit o3"><i></i></span>
+        </div>
+        <div class="code-chip cc-1" aria-hidden="true"><span class="k">add_action</span>( <span class="s">'init'</span> );</div>
+        <div class="code-chip cc-2" aria-hidden="true"><span class="k">register_block_type</span>( <span class="s">'dp/hero'</span> );</div>
 
         <div class="orbit-badge ob-1 ob-back" aria-hidden="true"><i class="fab fa-wordpress"></i></div>
         <div class="orbit-badge ob-2 ob-back" aria-hidden="true"><i class="fab fa-php"></i></div>
 
         <figure class="hero-card">
           <div class="card-bg" aria-hidden="true">
+            <span class="card-arcs"></span>
+            <span class="card-beam"></span>
             <img class="card-mark" src="assets/logo.svg" alt="" width="120" height="92" />
           </div>
           <span class="card-chip" aria-hidden="true"><b>12+</b> yrs</span>
