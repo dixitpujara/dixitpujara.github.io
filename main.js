@@ -6,25 +6,52 @@
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer  = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-/* ── Loading screen: hide once the hero photo/3D is ready (min 600ms, max 2.5s) ── */
+/* ── Loading screen: hide once the hero photo is ready (min 600ms, max 2.5s) ── */
 (function () {
+  const root   = document.documentElement;
   const loader = document.getElementById('pageLoader');
-  const hero   = document.getElementById('home');
+  const photo  = document.getElementById('heroPhoto');
   if (!loader) return;
+  root.classList.add('loading');          // holds the hero entrance until the loader fades
   const start = performance.now();
   let hidden = false;
   function hide() {
     if (hidden) return;
     hidden = true;
     const wait = reduceMotion ? 0 : Math.max(0, 600 - (performance.now() - start));
-    setTimeout(() => loader.classList.add('done'), wait);
+    setTimeout(() => { loader.classList.add('done'); root.classList.remove('loading'); }, wait);
   }
-  window.addEventListener('hero-ready', hide);
-  setTimeout(() => {
-    // 3D module never reported in (blocked or failed): fall back to the plain photo
-    if (hero && !hero.classList.contains('webgl-ready')) hero.classList.add('no-webgl');
-    hide();
-  }, 2500);
+  if (!photo || photo.complete) hide();
+  else { photo.addEventListener('load', hide); photo.addEventListener('error', hide); }
+  setTimeout(hide, 2500);
+})();
+
+/* ── Hero photo stage: tilts toward the cursor ── */
+(function () {
+  const stage = document.getElementById('heroStage');
+  const hero  = document.getElementById('home');
+  if (!stage || !hero || !finePointer || reduceMotion) return;
+  let raf = 0;
+  hero.addEventListener('pointermove', e => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      const r  = stage.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2);
+      const dy = (e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2);
+      const cx = Math.max(-1, Math.min(1, dx)), cy = Math.max(-1, Math.min(1, dy));
+      stage.classList.add('tracking');
+      stage.style.setProperty('--ry', (cx * 16).toFixed(2) + 'deg');
+      stage.style.setProperty('--rx', (-cy * 12).toFixed(2) + 'deg');
+      stage.style.setProperty('--gx', (50 + cx * 40).toFixed(1) + '%');
+      stage.style.setProperty('--gy', (40 + cy * 40).toFixed(1) + '%');
+    });
+  });
+  hero.addEventListener('pointerleave', () => {
+    cancelAnimationFrame(raf);
+    stage.classList.remove('tracking');
+    stage.style.setProperty('--rx', '0deg');
+    stage.style.setProperty('--ry', '0deg');
+  });
 })();
 
 /* ── Navbar: scroll shadow & active link ── */
@@ -164,42 +191,27 @@ const finePointer  = window.matchMedia('(hover: hover) and (pointer: fine)').mat
   });
 })();
 
-/* ── Per-box colours: taken from the box's own icon/logo, else a rotating palette ── */
+/* ── Per-box colours: shades of the logo blue, varied box to box ── */
 (function () {
   const palette = [
-    ['#6366F1', '#8B5CF6'], ['#0EA5E9', '#06B6D4'], ['#10B981', '#14B8A6'], ['#F59E0B', '#EF4444'],
-    ['#EC4899', '#8B5CF6'], ['#8B5CF6', '#06B6D4'], ['#F97316', '#F59E0B'], ['#14B8A6', '#6366F1'],
+    ['#0A6CF5', '#0038D6'], ['#00A6FF', '#0A6CF5'], ['#1D4ED8', '#1E3A8A'], ['#38BDF8', '#0284C7'],
+    ['#2563EB', '#0038D6'], ['#0EA5E9', '#1D4ED8'], ['#3B82F6', '#1E40AF'], ['#0284C7', '#0A6CF5'],
   ];
-  const isVivid = hex => {
-    const n = parseInt(hex.slice(1), 16);
-    const r = n >> 16, g = (n >> 8) & 255, b = n & 255;
-    return Math.max(r, g, b) - Math.min(r, g, b) > 60 && (r + g + b) / 3 > 50;
-  };
-
-  function coloursFor(card) {
-    const styled = card.querySelector('[style*="gradient"]');
-    if (styled) {
-      const hex = (styled.getAttribute('style').match(/#[0-9a-f]{6}/gi) || []).filter(isVivid);
-      if (hex.length) return [hex[0], hex[1] || hex[0]];
-    }
-    const logo = card.querySelector('img[src*="simpleicons"], img[src*="/si/"]');
-    const m = logo && logo.getAttribute('src').match(/([0-9a-f]{6})(?:\.svg)?$/i);
-    if (m && isVivid('#' + m[1])) return ['#' + m[1], '#' + m[1]];
-    return null;
-  }
-
   const groups = [
     '.logo-grid', '.about-highlights', '.about-sidebar', '.skills-grid', '.timeline',
     '.projects-grid', '.cert-grid', '.services-grid', '.contact-grid'
   ];
-  const cardSel = '.logo-card, .highlight-item, .info-card, .skill-category, .timeline-card, .project-card, .cert-card, .service-card, .contact-card';
+  const cardSel = '.logo-card, .highlight-item, .info-card, .skill-category, .timeline-item, .project-card, .cert-card, .service-card, .contact-card';
 
   groups.forEach((g, gi) => {
     document.querySelectorAll(g).forEach(group => {
       group.querySelectorAll(cardSel).forEach((card, i) => {
-        const [c1, c2] = coloursFor(card) || palette[(i + gi * 3) % palette.length];
-        card.style.setProperty('--c1', c1);
-        card.style.setProperty('--c2', c2);
+        const [c1, c2] = palette[(i + gi * 3) % palette.length];
+        [card, card.querySelector('.timeline-card')].forEach(el => {
+          if (!el) return;
+          el.style.setProperty('--c1', c1);
+          el.style.setProperty('--c2', c2);
+        });
       });
     });
   });
@@ -220,8 +232,8 @@ const finePointer  = window.matchMedia('(hover: hover) and (pointer: fine)').mat
     glare.className = 'tilt-glare';
     el.appendChild(glare);
 
-    const max = el.classList.contains('hero-terminal') ? 10 : 8;
-    const base = el.classList.contains('hero-terminal') ? 'perspective(900px) rotateY(-14deg) rotateX(6deg)' : '';
+    const max = 8;
+    const base = '';
     let raf = 0;
 
     el.addEventListener('pointerenter', () => {
