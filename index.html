@@ -30,7 +30,7 @@
       document.documentElement.classList.add('js');
     })();
   </script>
-  <link rel="stylesheet" href="style.css?v=12" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body>
 
@@ -135,16 +135,19 @@
         <div class="orbit-badge ob-2 ob-back" aria-hidden="true"><i class="fab fa-php"></i></div>
 
         <figure class="hero-card">
-          <picture>
-            <source srcset="assets/hero-photo.webp" type="image/webp" />
-            <img src="assets/hero-photo.jpg" alt="Dixit Pujara at his desk" width="760" height="912" fetchpriority="high" id="heroPhoto" />
+          <div class="card-bg" aria-hidden="true">
+            <img class="card-mark" src="assets/logo.svg" alt="" width="120" height="92" />
+          </div>
+          <span class="card-chip" aria-hidden="true"><b>12+</b> yrs</span>
+          <picture class="card-person">
+            <source srcset="assets/hero-cutout.webp" type="image/webp" />
+            <img src="assets/hero-cutout.png" alt="Dixit Pujara, Senior WordPress Developer and Team Lead" width="800" height="1066" fetchpriority="high" id="heroPhoto" />
           </picture>
           <span class="card-shine" aria-hidden="true"></span>
           <figcaption class="card-tag">
             <span class="badge-dot"></span>
             <span><strong>Dixit Pujara</strong><em>Team Lead · Ahmedabad</em></span>
           </figcaption>
-          <span class="card-chip" aria-hidden="true"><b>12+</b> yrs</span>
         </figure>
 
         <div class="orbit-badge ob-3" aria-hidden="true"><i class="fas fa-cart-shopping"></i><span>WooCommerce</span></div>
