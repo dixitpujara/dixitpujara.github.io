@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <meta name="theme-color" content="#F6F7FB" />
+  <meta name="theme-color" content="#F5F8FC" />
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
@@ -30,7 +30,7 @@
       document.documentElement.classList.add('js');
     })();
   </script>
-  <link rel="stylesheet" href="style.css?v=11" />
+  <link rel="stylesheet" href="style.css?v=12" />
 </head>
 <body>
 
@@ -80,9 +80,7 @@
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div class="hero-fallback" aria-hidden="true"></div>
   <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
-  <img class="hero-photo-fallback" src="assets/hero-portrait.jpg" alt="Dixit Pujara" width="360" height="360" />
   <div class="hero-spot" aria-hidden="true"></div>
   <div class="hero-container">
 
@@ -92,9 +90,10 @@
         Available for new projects
       </div>
       <h1 class="hero-title">
-        Hi, I'm<br><span class="gradient-text">Dixit Pujara</span>
+        <span class="hero-hi">Hi, I'm</span>
+        <span class="gradient-text">Dixit Pujara</span>
       </h1>
-      <p class="hero-role">Senior WordPress Developer &amp; Team Lead</p>
+      <p class="hero-role">Senior WordPress Developer <span>&amp;</span> Team Lead</p>
       <p class="hero-subtitle">
         12+ years crafting scalable WordPress solutions — custom plugins, themes, WooCommerce stores, Shopify builds, and REST API integrations — while leading and mentoring high-performing development teams.
       </p>
@@ -118,47 +117,44 @@
         <div class="stat-item"><span class="stat-num">🏆</span><span class="stat-label">Best Performer</span></div>
       </div>
 
-      <div class="hero-contact-strip">
-        <a href="mailto:dixitpujara@gmail.com" class="contact-pill">
-          <i class="fas fa-envelope"></i>
-          <span>dixitpujara@gmail.com</span>
-        </a>
-        <a href="https://wa.me/919909948203" target="_blank" rel="noopener" class="contact-pill contact-pill-green">
-          <i class="fab fa-whatsapp"></i>
-          <span>+91 9909948203</span>
-        </a>
-      </div>
-
       <div class="hero-socials">
         <a href="https://github.com/dixitpujara"              target="_blank" rel="noopener" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
         <a href="https://www.linkedin.com/in/dixit-pujara/"   target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
         <a href="mailto:dixitpujara@gmail.com"                class="social-link" aria-label="Email"><i class="fas fa-envelope"></i></a>
-        <a href="https://wa.me/919909948203"                  target="_blank" rel="noopener" class="social-link social-wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://wa.me/919909948203"                  target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
       </div>
     </div>
 
+    <!-- 3D photo stage: tilts toward the cursor (main.js), badges float at different depths -->
     <div class="hero-visual">
-      <div class="hero-terminal tilt">
-        <div class="terminal-header">
-          <span class="t-dot t-red"></span>
-          <span class="t-dot t-yellow"></span>
-          <span class="t-dot t-green"></span>
-          <span class="t-title">dixit@devstack ~ bash</span>
-        </div>
-        <div class="terminal-body">
-          <p class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">whoami</span></p>
-          <p class="t-line t-output">Dixit Pujara — Sr. WP Developer &amp; Lead</p>
-          <p class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">cat stack.txt</span></p>
-          <p class="t-line t-output"><span class="t-key">PHP</span> · <span class="t-key">WordPress</span> · <span class="t-key">WooCommerce</span></p>
-          <p class="t-line t-output"><span class="t-key">Shopify</span> · <span class="t-key">REST API</span> · <span class="t-key">MySQL</span></p>
-          <p class="t-line"><span class="t-prompt">$</span> <span class="t-cmd typing-cursor">echo $STATUS</span></p>
-          <p class="t-line t-output t-highlight">Open to Work ✓</p>
-        </div>
+      <div class="hero-stage" id="heroStage">
+        <div class="stage-glow" aria-hidden="true"></div>
+        <div class="stage-ring" aria-hidden="true"></div>
+
+        <div class="orbit-badge ob-1 ob-back" aria-hidden="true"><i class="fab fa-wordpress"></i></div>
+        <div class="orbit-badge ob-2 ob-back" aria-hidden="true"><i class="fab fa-php"></i></div>
+
+        <figure class="hero-card">
+          <picture>
+            <source srcset="assets/hero-photo.webp" type="image/webp" />
+            <img src="assets/hero-photo.jpg" alt="Dixit Pujara at his desk" width="760" height="912" fetchpriority="high" id="heroPhoto" />
+          </picture>
+          <span class="card-shine" aria-hidden="true"></span>
+          <figcaption class="card-tag">
+            <span class="badge-dot"></span>
+            <span><strong>Dixit Pujara</strong><em>Team Lead · Ahmedabad</em></span>
+          </figcaption>
+          <span class="card-chip" aria-hidden="true"><b>12+</b> yrs</span>
+        </figure>
+
+        <div class="orbit-badge ob-3" aria-hidden="true"><i class="fas fa-cart-shopping"></i><span>WooCommerce</span></div>
+        <div class="orbit-badge ob-4" aria-hidden="true"><i class="fab fa-shopify"></i><span>Shopify</span></div>
+        <div class="orbit-badge ob-5" aria-hidden="true"><i class="fab fa-react"></i></div>
+        <div class="orbit-badge ob-6" aria-hidden="true"><i class="fas fa-cube"></i><span>Gutenberg</span></div>
       </div>
     </div>
   </div>
 
-  <div class="hero-hint" aria-hidden="true"><i class="fas fa-arrow-pointer"></i> Move your cursor</div>
   <a href="#tech" class="hero-scroll-hint" aria-label="Scroll to explore">
     <span>Scroll to explore</span>
     <div class="scroll-arrow"></div>
@@ -1062,7 +1058,7 @@
   </div>
 </footer>
 
-<script src="main.js?v=5"></script>
-<script type="module" src="hero3d.js?v=2"></script>
+<script src="main.js?v=6"></script>
+<script type="module" src="hero3d.js?v=3"></script>
 </body>
 </html>
