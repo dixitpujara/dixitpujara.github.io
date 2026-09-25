@@ -26,6 +26,10 @@
   --shadow-lg: 0 30px 60px -20px rgba(40, 40, 120, .28), 0 8px 20px -8px rgba(15, 18, 34, .10);
   --grad: linear-gradient(120deg, #5B5BF0 0%, #8B5CF6 50%, #06B6D4 100%);
   --logo-chip: transparent;
+  --card-glass: rgba(255, 255, 255, .66);
+  --card-edge: rgba(255, 255, 255, .9);
+  --blob-alpha: 20%;
+  --dot: rgba(15, 18, 34, .07);
   --radius: 18px;
   --radius-sm: 12px;
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -55,6 +59,10 @@
   --shadow-lg: 0 34px 70px -24px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .04);
   --grad: linear-gradient(120deg, #8484FF 0%, #A78BFA 50%, #22D3EE 100%);
   --logo-chip: rgba(255, 255, 255, .92);
+  --card-glass: rgba(18, 20, 34, .62);
+  --card-edge: rgba(255, 255, 255, .05);
+  --blob-alpha: 24%;
+  --dot: rgba(255, 255, 255, .06);
   color-scheme: dark;
 }
 
@@ -595,6 +603,93 @@ a.cc-value:hover { color: var(--accent); }
 }
 .cursor-ring.on { opacity: .7; }
 .cursor-ring.hover { width: 56px; height: 56px; margin: -28px 0 0 -28px; background: var(--accent-soft); }
+
+/* ══════════════ PREMIUM GLASS BOXES ══════════════ */
+/* Each box gets its own --c1/--c2 (set in main.js from its icon colours) */
+.logo-card, .highlight-item, .info-card, .skill-category, .timeline-card,
+.project-card, .cert-card, .service-card, .contact-card {
+  --c1: var(--accent);
+  --c2: var(--accent-3);
+  background:
+    radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--c1) 16%, transparent), transparent 55%),
+    radial-gradient(100% 80% at 0% 100%, color-mix(in srgb, var(--c2) 11%, transparent), transparent 60%),
+    var(--card-glass);
+  border: 1px solid var(--card-edge);
+  /* no backdrop-filter: the section behind is already soft colour, and blur on
+     dozens of tilting cards costs too much on low-end phones */
+  box-shadow:
+    0 18px 34px -22px color-mix(in srgb, var(--c1) 55%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+/* thin glowing gradient edge */
+.logo-card::before, .highlight-item::before, .info-card::before, .skill-category::before, .timeline-card::before,
+.project-card::before, .cert-card::before, .service-card::before, .contact-card::before {
+  content: '';
+  position: absolute; inset: -1px; z-index: 4;
+  border-radius: inherit; padding: 1px;
+  background: linear-gradient(135deg, var(--c1), color-mix(in srgb, var(--c1) 20%, transparent) 35%, transparent 55%, color-mix(in srgb, var(--c2) 30%, transparent) 75%, var(--c2));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: .75;
+  pointer-events: none;
+  transition: opacity .4s var(--ease);
+}
+.logo-card:hover::before, .highlight-item:hover::before, .info-card:hover::before, .skill-category:hover::before, .timeline-card:hover::before,
+.project-card:hover::before, .cert-card:hover::before, .service-card:hover::before, .contact-card:hover::before { opacity: 1; }
+.logo-card:hover, .highlight-item:hover, .info-card:hover, .skill-category:hover, .timeline-card:hover,
+.project-card:hover, .cert-card:hover, .service-card:hover, .contact-card:hover,
+.tilt.tilting {
+  box-shadow:
+    0 34px 70px -30px color-mix(in srgb, var(--c1, var(--accent)) 75%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--c1, var(--accent)) 12%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, .4);
+}
+:root[data-theme="dark"] :is(.logo-card, .highlight-item, .info-card, .skill-category, .timeline-card, .project-card, .cert-card, .service-card, .contact-card) {
+  box-shadow:
+    0 18px 36px -22px color-mix(in srgb, var(--c1) 65%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+/* accents inside the box follow its colours */
+.highlight-icon { background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 10px 20px -8px var(--c1); }
+.cert-badge { background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 12px 22px -10px var(--c1); }
+.cert-date { color: var(--c1); background: color-mix(in srgb, var(--c1) 12%, transparent); }
+.info-card h3 i, .info-list i:not(.check-green) { color: var(--c1); }
+.logo-fa { color: var(--c1); background: color-mix(in srgb, var(--c1) 14%, transparent); }
+.service-list li::before { color: var(--c1); }
+.project-type { color: var(--c1); }
+.project-card .project-tags span, .timeline-card .tl-tags span, .specialty-tags span {
+  color: var(--c1); background: color-mix(in srgb, var(--c1) 11%, transparent);
+}
+.tl-points li::before { background: var(--c1); }
+.skill-bar { background: color-mix(in srgb, var(--c1) 10%, var(--surface-2)); }
+
+/* ── Section depth: colour clouds + dot grid, different per section ── */
+.section { isolation: isolate; overflow: clip; --b1: var(--accent); --b2: var(--accent-3); }
+.section::before, .section::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  transform: translateZ(0); /* own layer: painted once, not on every card animation frame */
+}
+.section::before {
+  background:
+    radial-gradient(38% 45% at 8% 18%, color-mix(in srgb, var(--b1) var(--blob-alpha), transparent), transparent 70%),
+    radial-gradient(34% 42% at 94% 62%, color-mix(in srgb, var(--b2) var(--blob-alpha), transparent), transparent 70%),
+    radial-gradient(28% 30% at 55% 105%, color-mix(in srgb, var(--b1) calc(var(--blob-alpha) * .6), transparent), transparent 70%);
+}
+.section::after {
+  background-image: radial-gradient(var(--dot) 1.2px, transparent 1.3px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 20%, transparent 75%);
+}
+#tech           { --b1: #6366F1; --b2: #06B6D4; }
+#about          { --b1: #8B5CF6; --b2: #0EA5E9; }
+#skills         { --b1: #F59E0B; --b2: #6366F1; }
+#experience     { --b1: #06B6D4; --b2: #8B5CF6; }
+#projects       { --b1: #A855F7; --b2: #10B981; }
+#certifications { --b1: #EC4899; --b2: #6366F1; }
+#services       { --b1: #0EA5E9; --b2: #F59E0B; }
+#contact        { --b1: #10B981; --b2: #6366F1; }
 
 /* ══════════════ RESPONSIVE ══════════════ */
 @media (max-width: 1100px) {

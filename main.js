@@ -143,6 +143,47 @@ const finePointer  = window.matchMedia('(hover: hover) and (pointer: fine)').mat
   });
 })();
 
+/* ── Per-box colours: taken from the box's own icon/logo, else a rotating palette ── */
+(function () {
+  const palette = [
+    ['#6366F1', '#8B5CF6'], ['#0EA5E9', '#06B6D4'], ['#10B981', '#14B8A6'], ['#F59E0B', '#EF4444'],
+    ['#EC4899', '#8B5CF6'], ['#8B5CF6', '#06B6D4'], ['#F97316', '#F59E0B'], ['#14B8A6', '#6366F1'],
+  ];
+  const isVivid = hex => {
+    const n = parseInt(hex.slice(1), 16);
+    const r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+    return Math.max(r, g, b) - Math.min(r, g, b) > 60 && (r + g + b) / 3 > 50;
+  };
+
+  function coloursFor(card) {
+    const styled = card.querySelector('[style*="gradient"]');
+    if (styled) {
+      const hex = (styled.getAttribute('style').match(/#[0-9a-f]{6}/gi) || []).filter(isVivid);
+      if (hex.length) return [hex[0], hex[1] || hex[0]];
+    }
+    const logo = card.querySelector('img[src*="simpleicons"], img[src*="/si/"]');
+    const m = logo && logo.getAttribute('src').match(/([0-9a-f]{6})(?:\.svg)?$/i);
+    if (m && isVivid('#' + m[1])) return ['#' + m[1], '#' + m[1]];
+    return null;
+  }
+
+  const groups = [
+    '.logo-grid', '.about-highlights', '.about-sidebar', '.skills-grid', '.timeline',
+    '.projects-grid', '.cert-grid', '.services-grid', '.contact-grid'
+  ];
+  const cardSel = '.logo-card, .highlight-item, .info-card, .skill-category, .timeline-card, .project-card, .cert-card, .service-card, .contact-card';
+
+  groups.forEach((g, gi) => {
+    document.querySelectorAll(g).forEach(group => {
+      group.querySelectorAll(cardSel).forEach((card, i) => {
+        const [c1, c2] = coloursFor(card) || palette[(i + gi * 3) % palette.length];
+        card.style.setProperty('--c1', c1);
+        card.style.setProperty('--c2', c2);
+      });
+    });
+  });
+})();
+
 /* ── 3D tilt cards (cursor tracked) ── */
 (function () {
   if (!finePointer || reduceMotion) return;
