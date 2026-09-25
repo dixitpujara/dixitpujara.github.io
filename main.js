@@ -66,12 +66,6 @@ const finePointer  = window.matchMedia('(hover: hover) and (pointer: fine)').mat
     apply(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
   });
 
-  // Follow the OS setting until the visitor picks a theme themselves
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    let saved = null;
-    try { saved = localStorage.getItem('dp-theme'); } catch (err) {}
-    if (!saved) apply(e.matches ? 'dark' : 'light', false);
-  });
 })();
 
 /* ── Scroll reveal (3D perspective) ── */
