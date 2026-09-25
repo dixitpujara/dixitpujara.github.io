@@ -630,7 +630,7 @@ a.cc-value:hover { color: var(--accent); }
   .container, .nav-container, .hero-container { padding: 0 16px; }
   .section { padding: 80px 0; }
   .nav-cta { display: none; }
-  .hero-stats { gap: 14px; padding: 14px 16px; width: 100%; justify-content: space-between; }
+  .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; padding: 16px 18px; width: 100%; }
   .stat-div { display: none; }
   .stat-num { font-size: 22px; }
   .hero-actions .btn { flex: 1 1 auto; }
